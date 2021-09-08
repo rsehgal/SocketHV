@@ -17,6 +17,7 @@ HVSocket::~HVSocket(){
 }
 
 HVSocket::HVSocket(std::string ipaddress, int port) : fIpAddress(ipaddress), fPort(port){
+	fNumOfChannels=16;
 	Connect();
 }
 
@@ -55,6 +56,7 @@ int HVSocket::DisConnect(){
 int HVSocket::Send(std::string cmd){
 	//Send some data
         //char *message = "GET / HTTP/1.1\r\n\r\n";
+	cmd += "\n\Esc";
         if( send(fSocket_Desc , cmd.c_str() , cmd.length() , 0) < 0)
         {
                 //puts("Send failed");
@@ -68,16 +70,53 @@ int HVSocket::Send(std::string cmd){
 int HVSocket::Recv(){
 	char server_reply[2000];
          //Receive a reply from the server
-        if( recvfrom(fSocket_Desc, server_reply , 2000 , 0) < 0)
+        if( recv(fSocket_Desc, server_reply , 2000 , 0) < 0)
         {
                 std::cerr << "recv failed...." << std::endl;
 		return 1;
         }
 
 	std::cout << "Reply received........" << std::endl;
-	std::cout << server_reply[0]<< std::endl;
+	std::cout << server_reply[2]<< std::endl;
 
 	return 0;
 }
 
+int HVSocket::SystemOnChannelsOff(){
+	return Send("X 1");
+}
 
+int HVSocket::SystemOn(){
+	return Send("X 1");
+}
+int HVSocket::ChannelsOn(){
+	//Send("X 1");
+	for(unsigned int chNo = 0 ; chNo < fNumOfChannels ; chNo++){
+		Send(("O "+std::to_string(chNo)).c_str());
+	}
+}
+
+int HVSocket::ChannelsOn(unsigned int crateNo){
+	//Send("X 1");
+	for(unsigned int chNo = 0 ; chNo < (crateNo+1)*fNumOfChannels ; chNo++){
+		Send(("O "+std::to_string(chNo)).c_str());
+	}
+}
+
+int HVSocket::SystemOnChannelsOn(){
+	Send("X 1");
+	for(unsigned int chNo = 0 ; chNo < fNumOfChannels ; chNo++){
+		Send(("O "+std::to_string(chNo)).c_str());
+	}
+}
+
+int HVSocket::SystemOnChannelsOn(unsigned int crateNo){
+	Send("X 1");
+	for(unsigned int chNo = 0 ; chNo < (crateNo+1)*fNumOfChannels ; chNo++){
+		Send(("O "+std::to_string(chNo)).c_str());
+	}
+}
+
+int HVSocket::SystemOff(){
+	Send("X 0");
+}

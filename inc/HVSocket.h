@@ -10,6 +10,7 @@ class HVSocket{
 	std::string fIpAddress;
 	int fPort;
 	int fSocket_Desc;
+	int fNumOfChannels;
 
 public:
 	HVSocket();
@@ -20,6 +21,16 @@ public:
 	int DisConnect();
 	int Send(std::string command);
 	int Recv();
+
+	/*Switch ON Power Supply*/
+	int SystemOnChannelsOff();
+	int SystemOn();
+	int SystemOnChannelsOn();
+	int SystemOnChannelsOn(unsigned int crateNo);
+	int ChannelsOn();
+	int ChannelsOn(unsigned int crateNo);
+
+	int SystemOff();
 };
 
 #endif
