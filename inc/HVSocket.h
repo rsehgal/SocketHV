@@ -6,11 +6,15 @@
 #ifndef HVSocket_h
 #define HVSocket_h
 
+#include <string>
+#include <vector>
+
 class HVSocket {
   std::string fIpAddress;
   int fPort;
   int fSocket_Desc;
   int fNumOfChannels;
+  bool fSystemOn;
 
 public:
   HVSocket();
@@ -27,8 +31,16 @@ public:
   int SystemOn();
   int SystemOnChannelsOn();
   int SystemOnChannelsOn(unsigned int crateNo);
+
   int ChannelsOn();
-  int ChannelsOn(unsigned int crateNo);
+  int ChannelsOnWithIndex(unsigned int channelIndex);
+  int ChannelsOnWithCrateIndex(unsigned int crateIndex);
+  int ChannelsOnWithCrateIndex(std::vector<unsigned int> vecOfCrateIndex);
+  int ChannelsOnWithIndex(std::vector<unsigned int> vecOfChannelIndex);
+
+  int SetVoltage(std::vector<unsigned int> channelNoVec);
+  int SetVoltage(unsigned int channelNo,unsigned int voltage);
+  int SetVoltage(unsigned int voltage);
 
   int SystemOff();
 };

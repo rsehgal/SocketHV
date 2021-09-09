@@ -5,6 +5,7 @@
 */
 #include "HVSocket.h"
 #include <iostream>
+#include "colors.h"
 int main(int argc, char *argv[]) {
   std::string ip = "10.12.80.240";
   int port = 4003;
